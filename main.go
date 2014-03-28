@@ -14,9 +14,15 @@ func main() {
 	var outTE *walk.TextEdit
 	var mw *walk.MainWindow
 
-	_, err := MainWindow{
+	defer func() {
+		if e := recover(); e != nil {
+			walk.MsgBox(mw, "Error", fmt.Sprintf("%v", e), walk.MsgBoxIconInformation)
+		}
+	}()
+
+	MainWindow{
 		AssignTo: &mw,
-		Title:    "24 Point",
+		Title:    "24 Game",
 		MinSize:  Size{600, 400},
 		Layout:   VBox{},
 		Children: []Widget{
@@ -65,8 +71,4 @@ func main() {
 			},
 		},
 	}.Run()
-
-	if err != nil {
-		walk.MsgBox(mw, "Error", err.Error(), walk.MsgBoxIconInformation)
-	}
 }
