@@ -2,18 +2,20 @@ use num_rational::Rational32;
 use num_traits::Zero;
 use std::env;
 use std::fmt;
+mod expr;
+use self::expr::*;
 
 #[derive(Clone)]
 struct Calculation {
   result: Rational32,
-  expression: String,
+  expression: Expr,
 }
 
 impl From<i32> for Calculation {
   fn from(n: i32) -> Calculation {
     Calculation {
       result: n.into(),
-      expression: n.to_string(),
+      expression: n.into(),
     }
   }
 }
@@ -80,17 +82,11 @@ fn create_calculation(
       '/' => numbers[left].result / numbers[right].result,
       _ => panic!(),
     },
-    expression: if numbers.len() > 2 && operator != '*' {
-      format!(
-        "({}{}{})",
-        numbers[left].expression, operator, numbers[right].expression
-      )
-    } else {
-      format!(
-        "{}{}{}",
-        numbers[left].expression, operator, numbers[right].expression
-      )
-    },
+    expression: merge_expr(
+      numbers[left].expression.clone(),
+      operator,
+      numbers[right].expression.clone(),
+    ),
   }
 }
 
@@ -108,7 +104,7 @@ fn calculate(numbers: Vec<Calculation>, solutions: &mut Vec<Calculation>) {
       } else if reduced[0].result == 24.into() {
         if !solutions
           .iter()
-          .any(|solution| solution.expression == reduced[0].expression)
+          .any(|solution| solution.to_string() == reduced[0].to_string())
         {
           solutions.push(reduced[0].clone());
         }
