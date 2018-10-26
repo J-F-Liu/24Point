@@ -1,12 +1,11 @@
 use num_rational::Rational32;
 use num_traits::Zero;
-use std::env;
 use std::fmt;
 mod expr;
 use self::expr::*;
 
 #[derive(Clone)]
-struct Calculation {
+pub struct Calculation {
   result: Rational32,
   expression: Expr,
 }
@@ -113,34 +112,9 @@ fn calculate(numbers: Vec<Calculation>, solutions: &mut Vec<Calculation>) {
   }
 }
 
-fn solve(numbers: Vec<i32>) -> Vec<Calculation> {
+pub fn solve(numbers: Vec<i32>) -> Vec<Calculation> {
   let mut solutions = vec![];
   let calculations = numbers.into_iter().map(|num| num.into()).collect();
   calculate(calculations, &mut solutions);
   solutions
-}
-
-fn main() {
-  use std::borrow::Cow;
-  let numbers: Vec<i32> = env::args()
-    .skip(1)
-    .map(|arg| {
-      i32::from_str_radix(&arg, 10).unwrap_or_else(|_| {
-        println!("{} is not a valid numbers.", arg);
-        ::std::process::exit(1);
-      })
-    })
-    .collect();
-  let solutions = solve(numbers);
-  println!(
-    "Found {}.",
-    match solutions.len() {
-      0 => Cow::from("no solution"),
-      1 => Cow::from("1 solution"),
-      n @ _ => Cow::from(format!("{} solutions", n)),
-    }
-  );
-  for solution in solutions {
-    println!("{}", solution);
-  }
 }
