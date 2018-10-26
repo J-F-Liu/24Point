@@ -124,7 +124,12 @@ fn main() {
   use std::borrow::Cow;
   let numbers: Vec<i32> = env::args()
     .skip(1)
-    .map(|arg| i32::from_str_radix(&arg, 10).expect("Input valid numbers."))
+    .map(|arg| {
+      i32::from_str_radix(&arg, 10).unwrap_or_else(|_| {
+        println!("{} is not a valid numbers.", arg);
+        ::std::process::exit(1);
+      })
+    })
     .collect();
   let solutions = solve(numbers);
   println!(
