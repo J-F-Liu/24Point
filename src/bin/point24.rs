@@ -21,7 +21,7 @@ fn main() {
       n @ _ => Cow::from(format!("{} solutions", n)),
     }
   );
-  for solution in solutions {
+  for solution in solutions.split(";") {
     println!("{}", solution);
   }
 }

@@ -3,6 +3,7 @@ use num_traits::Zero;
 use std::fmt;
 mod expr;
 use self::expr::*;
+use wasm_bindgen::prelude::*;
 
 #[derive(Clone)]
 pub struct Calculation {
@@ -112,9 +113,11 @@ fn calculate(numbers: Vec<Calculation>, solutions: &mut Vec<Calculation>) {
   }
 }
 
-pub fn solve(numbers: Vec<i32>) -> Vec<Calculation> {
+#[wasm_bindgen]
+pub fn solve(numbers: Vec<i32>) -> String {
   let mut solutions = vec![];
   let calculations = numbers.into_iter().map(|num| num.into()).collect();
   calculate(calculations, &mut solutions);
-  solutions
+  let formulas: Vec<String> = solutions.iter().map(|s|s.to_string()).collect();
+  formulas.join(";")
 }
