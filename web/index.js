@@ -76,7 +76,7 @@ class Calculator extends React.Component {
     const { numbers } = this.state;
     const result = solve(numbers);
     const solution =
-      result == "" ? "No sultion found." : result.split(";").join("\n");
+      result == "" ? "No solution found." : result.split(";").join("\n");
     this.setState({ solution });
   };
 
